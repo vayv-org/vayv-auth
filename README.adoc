@@ -1,0 +1,152 @@
+= Vayv Auth
+
+An open source *OpenID Connect (OIDC) identity provider* written in Rust.
+Vayv Auth aims to provide a simple, secure, and standards-compliant authentication server 
+that can be integrated with modern web services, APIs, and distributed systems.
+
+This project focuses on:
+
+* OAuth2 and OpenID Connect compatibility
+* Secure token issuance
+* Modern Rust architecture
+* Self-hosted identity infrastructure
+
+== What is OpenID Connect?
+
+*OpenID Connect (OIDC)* is an authentication protocol built on top of *OAuth 2.0*.
+
+OAuth2 was originally designed for *authorization* (granting access to resources), 
+but it does not define a standard way to authenticate users.  
+OIDC adds a standardized identity layer on top of OAuth2.
+
+In simple terms:
+
+* *OAuth2* => "Can this app access your data?"
+* *OIDC* => "Who is the user?"
+
+OIDC allows applications to authenticate users and obtain basic profile information using *tokens issued by an Identity Provider (IdP)*.
+
+
+== Core Components
+
+OIDC systems typically include the following actors:
+
+*User (Resource Owner)*::
+The human who wants to log in.
+
+*Client Application*::
+The app that wants to authenticate the user (web app, mobile app, backend service).
+
+*Identity Provider (IdP)*::
+The authentication server that verifies identity and issues tokens.  
+In this project, *Vayv Auth is the Identity Provider*.
+
+*Authorization Server*::
+Often combined with the Identity Provider. It manages login, consent, and token issuance.
+
+*Resource Server*::
+APIs or services that accept access tokens to authorize requests.
+
+
+== OIDC Authentication Flow
+
+A simplified *Authorization Code Flow* looks like this:
+
+....
++--------+                                +-------------------+
+|        |                                |                   |
+|  User  |                                |  Client App       |
+|        |                                |                   |
++---+----+                                +---------+---------+
+    |                                               |
+    | 1. Click "Login with Vayv"                    |
+    |---------------------------------------------->|
+    |                                               |
+    |                         2. Redirect user to IdP
+    |<----------------------------------------------|
+    |                                               |
+    v                                               |
++-------------------+                               |
+|                   |                               |
+|   Vayv Auth       |                               |
+|  (Identity        |                               |
+|   Provider)       |                               |
++---------+---------+                               |
+          |                                         |
+          | 3. User authenticates                   |
+          | (password, MFA, etc.)                   |
+          |                                         |
+          | 4. Authorization Code                   |
+          +---------------------> Client App -------+
+                                   |
+                                   | 5. Exchange code
+                                   |    for tokens
+                                   v
+                          +------------------+
+                          | Token Endpoint   |
+                          +--------+---------+
+                                   |
+                                   | 6. ID Token
+                                   |    Access Token
+                                   v
+                            +-------------+
+                            | Client App  |
+                            +-------------+
+....
+
+== Tokens in OIDC
+
+OIDC introduces several token types.
+
+=== ID Token
+
+A *JWT (JSON Web Token)* that proves the user's identity.  
+It contains claims such as:
+
+* `sub` - unique user identifier
+* `iss` - issuer
+* `aud` - intended audience
+* `exp` - expiration
+* `email`
+* `name`
+
+The client application verifies this token to confirm the user’s identity.
+
+=== Access Token
+
+Used to access protected APIs.  
+The client sends it in requests like:
+
+....
+Authorization: Bearer ACCESS_TOKEN
+....
+
+The resource server validates the token before allowing access.
+
+=== Refresh Token
+
+Allows the client to obtain new access tokens without forcing the user to log in again.  
+This enables long-lived sessions while keeping access tokens short-lived.
+
+== Goals of Vayv Auth
+
+Vayv Auth aims to provide a modern self-hosted identity provider with:
+
+* Standards-compliant OIDC implementation
+* Secure token handling
+* High performance Rust architecture
+* Simple integration with web services
+* Transparent and auditable authentication logic
+
+
+== Disclaimer
+
+This project is an independent open source implementation 
+and is not affiliated with any company named *Vayv*.
+
+
+== License
+
+Licensed under either:
+
+*MIT License* or *Apache License 2.0* at your option.

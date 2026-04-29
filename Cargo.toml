@@ -1,0 +1,15 @@
+[package]
+name = "oicd"
+version = "0.1.0"
+edition = "2024"
+description = "An open source OIDC / OAuth2 identity provider"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/vayv-org/oicd"
+homepage = "https://github.com/vayv-org/oicd"
+documentation = "https://docs.rs/oicd"
+
+authors = ["Vayv Team"]
+readme = "README.md"
+
+keywords = ["oidc", "oauth2", "sso", "identity", "auth"]
+categories = ["authentication", "web-programming"]
